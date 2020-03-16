@@ -77,7 +77,7 @@ exports.createPost = (req, res, next) => {
 }; 
 
 //PUT routes
-exports.update = (req, res, next) => {
+exports.updateByID = (req, res, next) => {
     let apartmentId = req.params.apartmentId;
     if(!validationResult(req).isEmpty) {
         return res.status(422).json({message: "Validation Failed, entered data is incorrect."});
@@ -96,7 +96,6 @@ exports.update = (req, res, next) => {
     }
 
     Apartment.findById(apartmentId).then(apartment => {
-        console.log("HERE IN FIND BY ID");
         if(!apartment) {
             const error = new Error("Could not find apartment");
             error.statusCode = 404;
@@ -126,4 +125,26 @@ exports.update = (req, res, next) => {
 const deleteImage = filePath => {
     filePath = path.join(__dirname, "..", filePath);
     fs.unlink(filePath, err => console.log(err));
+};
+
+//Delete routes
+exports.deleteByID = (req, res, error) => {
+    Apartment.findById(req.params.apartmentId).then(apartment => {
+        if(!apartment) {
+            const error = new Error("Could not find apartment");
+            error.statusCode = 404;
+            throw error;
+        }
+        deleteImage(apartment.imageURL);
+        return Apartment.findByIdAndRemove(req.params.apartmentId);
+    }).then(result => {
+        res.status(200).json({
+            message: "Deleted apartment"
+        });
+    }).catch(error => {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    });
 };

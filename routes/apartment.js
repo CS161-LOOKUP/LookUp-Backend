@@ -25,6 +25,10 @@ router.post("/createpost", [
 router.put("/update/:apartmentId", [
     body('title').trim().isLength({min: 1}),
     body('description').trim().isLength({min: 1})
-], apartmentController.update)
+], apartmentController.updateByID)
+
+//DELETE /apartment/delete/:apartmentId
+//Description: Delete's a apartment based on ID.
+router.delete("/delete/:apartmentId", apartmentController.deleteByID);
 
 module.exports = router;  
