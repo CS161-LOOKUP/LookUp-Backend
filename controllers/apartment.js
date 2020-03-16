@@ -1,4 +1,6 @@
 const {validationResult} = require('express-validator');
+const fs = require('fs');
+const path = require('path');
 const Apartment = require('../model/apartment');
 
 //GET routes
@@ -20,7 +22,7 @@ exports.getPosts = (req, res, next) => {
 
 //Description: Gets all the listings based on an ID.
 exports.getPostByID = (req, res, next) => {
-    Apartment.findById(req.params.postId)
+    Apartment.findById(req.params.apartmentId)
     .then(result => {
         if(!result) {
             const error = new Error("Could not find apartment");
@@ -73,3 +75,55 @@ exports.createPost = (req, res, next) => {
         next(err); 
     });
 }; 
+
+//PUT routes
+exports.update = (req, res, next) => {
+    let apartmentId = req.params.apartmentId;
+    if(!validationResult(req).isEmpty) {
+        return res.status(422).json({message: "Validation Failed, entered data is incorrect."});
+    }
+    let title = req.body.title
+    let description = req.body.description
+    let price = req.body.price
+    let imageURL = req.body.imageURL
+    if (req.file) {
+        imageURL = req.file.path;
+    }
+    if(!imageURL){
+        const error = new Error("No file picked");
+        error.statusCode = 422;
+        throw error;
+    }
+
+    Apartment.findById(apartmentId).then(apartment => {
+        console.log("HERE IN FIND BY ID");
+        if(!apartment) {
+            const error = new Error("Could not find apartment");
+            error.statusCode = 404;
+            throw error;
+        }
+        if(imageURL != apartment.imageURL) {
+            deleteImage(apartment.imageURL);
+        }
+        apartment.title = title;
+        apartment.price = price;
+        apartment.description = description;
+        apartment.imageURL = imageURL;
+        return apartment.save();
+    }).then(result => {
+        res.status(200).json({
+            message: "Apartment updated!",
+            apartment: result
+        });
+    }).catch(err => {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    });
+};
+
+const deleteImage = filePath => {
+    filePath = path.join(__dirname, "..", filePath);
+    fs.unlink(filePath, err => console.log(err));
+};
