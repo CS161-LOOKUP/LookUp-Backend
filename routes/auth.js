@@ -24,4 +24,8 @@ router.post("/createUser", [
     body("interests").not().isEmpty()
 ], authController.signUp);
 
+//POST /user/login
+//Description: Log a user in.
+router.post("/login", authController.login);
+
 module.exports = router;

@@ -1,5 +1,6 @@
 const User = require("../model/user");
 const bcrpyt = require('bcryptjs');
+const jwt = require("jsonwebtoken");
 const { validationResult } = require('express-validator');
 
 exports.getUsers = (req, res, next) => {
@@ -37,6 +38,35 @@ exports.signUp = (req, res, next) => {
             message: "User created successfully!",
             user: result
         });
+    }).catch(err => {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    });
+};
+
+exports.login = (req, res, next) => {
+    let loadedUser;
+    User.findOne({email: req.body.email}).then(user => {
+        if (!user) {
+            const error = new Error("User not found!");
+            error.statusCode = 401;
+            throw error;
+        }
+        loadedUser = user;
+        return bcrpyt.compare(req.body.password, user.password);
+    }).then(isEqual => {
+        if(!isEqual) {
+            const error = new Error("Incorrect password");
+            error.statusCode = 401;
+            throw error;
+        }
+        let token = jwt.sign(
+            {email: loadedUser.email, userId: loadedUser._id.toString()},
+            "129!89.:'dfYH1AJH2_*29jahbdh13jHG!J~khasn@#", { expiresIn: "1h" }
+        );
+        res.status(200).json({token: token, userId: loadedUser._id.toString()});
     }).catch(err => {
         if (!err.statusCode) {
             err.statusCode = 500;

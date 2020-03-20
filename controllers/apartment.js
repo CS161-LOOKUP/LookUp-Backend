@@ -39,7 +39,7 @@ exports.getPostByID = (req, res, next) => {
         }
         next(err);
     });
-}
+};
 
 //POST routes
 exports.createPost = (req, res, next) => {
