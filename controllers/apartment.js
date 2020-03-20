@@ -65,12 +65,12 @@ exports.createPost = (req, res, next) => {
     });
     apartment.save().then(result => {
         res.status(201).json({
-            message: "Post created succesfully!",
+            message: "Apartment created succesfully!",
             post: result
         });
     }).catch(err => {
         if (!err.statusCode) {
-            err.statusCode = 409;
+            err.statusCode = 500;
         }
         next(err); 
     });

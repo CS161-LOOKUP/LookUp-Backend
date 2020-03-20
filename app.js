@@ -1,8 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const apartmentRoutes = require("./routes/apartment");
 const bodyParser = require("body-parser");
 const multer = require("multer");
+
+const apartmentRoutes = require("./routes/apartment");
+const authRoutes = require("./routes/auth");
 
 const expressApp = express();
 
@@ -35,13 +37,17 @@ expressApp.use((req, res, next) => {
     next();
 });
 
+
+//ROUTES
+expressApp.use("/user", authRoutes);
 expressApp.use("/apartment", apartmentRoutes);
 
 expressApp.use((error, req, res, next) => {
     const status = error.statusCode || 500;
     const message = error.message;
     res.status(status).json({
-        message: message
+        message: message,
+        data: error.data
     });
 });
 
