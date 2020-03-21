@@ -1,7 +1,9 @@
 const {validationResult} = require('express-validator');
 const fs = require('fs');
 const path = require('path');
+
 const Apartment = require('../model/apartment');
+const User = require('../model/user');
 
 //GET routes
 
@@ -61,12 +63,20 @@ exports.createPost = (req, res, next) => {
         title: title,
         description: description,
         price: price,
-        imageURL: imageURL
+        imageURL: imageURL,
+        user: req.userId
     });
-    apartment.save().then(result => {
+    apartment.save()
+    .then(createdApartment => {
+        return User.findById(req.userId);
+    }).then(user => {
+        user.posts.push(apartment);
+        return user.save();
+    }).then(updatedUser => {
         res.status(201).json({
             message: "Apartment created succesfully!",
-            post: result
+            post: apartment,
+            user: updatedUser._id
         });
     }).catch(err => {
         if (!err.statusCode) {
