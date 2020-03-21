@@ -158,6 +158,11 @@ exports.deleteByID = (req, res, error) => {
         deleteImage(apartment.imageURL);
         return Apartment.findByIdAndRemove(req.params.apartmentId);
     }).then(result => {
+        return User.findById(req.userId);
+    }).then(user => {
+        user.posts.pull(req.params.apartmentId);
+        return user.save();
+    }).then(updatedUser => {
         res.status(200).json({
             message: "Deleted apartment"
         });
