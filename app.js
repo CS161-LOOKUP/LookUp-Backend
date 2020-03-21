@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const multer = require("multer");
+const path = require('path');
 
 const apartmentRoutes = require("./routes/apartment");
 const authRoutes = require("./routes/auth");
@@ -17,7 +18,7 @@ const fileStorage = multer.diskStorage({
     }
 });
 
-//Accepted files for images
+//Accepted files for images are PNG, JPG and JPEG
 const fileFilter = (req, file, cb) => {
     if(file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
         cb(null, true);
@@ -27,7 +28,8 @@ const fileFilter = (req, file, cb) => {
 };
 
 expressApp.use(bodyParser.json());
-expressApp.use(multer({storage: fileStorage, fileFilter: fileFilter}).single('image'));
+expressApp.use(multer({storage: fileStorage, fileFilter: fileFilter}).single('imageURL'));
+expressApp.use('/images', express.static(path.join(__dirname, 'images')));
 
 //To avoid CORS error.
 expressApp.use((req, res, next) => {
@@ -36,7 +38,6 @@ expressApp.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
 });
-
 
 //ROUTES
 expressApp.use("/user", authRoutes);

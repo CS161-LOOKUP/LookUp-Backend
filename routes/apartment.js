@@ -16,17 +16,18 @@ router.get('/post/:apartmentId', isAuth, apartmentController.getPostByID);
 //POST /apartment/createpost
 //Description: Create a post made by the user, this route doesn't use JSON in frontend
 //instead should use Form data because we need to upload an image.
-router.post("/createpost", [
+router.post("/createpost", isAuth, [
     body('title').trim().isLength({min: 1}),
     body('description').trim().isLength({min: 1})
-], isAuth, apartmentController.createPost);
+], apartmentController.createPost);
 
 //PUT /apartment/update/:apartmentId
-//Description: Updates a existing post. Route doesn't use JSON also, since image could be changed. 
-router.put("/update/:apartmentId", [
+//Description: Updates a existing post. Need to send imagePath if user didn't select a new image.
+//Route doesn't use JSON also, since image could be changed. 
+router.put("/update/:apartmentId", isAuth, [
     body('title').trim().isLength({min: 1}),
     body('description').trim().isLength({min: 1})
-], isAuth, apartmentController.updateByID)
+], apartmentController.updateByID)
 
 //DELETE /apartment/delete/:apartmentId
 //Description: Delete's a apartment based on ID.

@@ -111,6 +111,11 @@ exports.updateByID = (req, res, next) => {
             error.statusCode = 404;
             throw error;
         }
+        if(apartment.user.toString() !== req.userId){
+            const error = new Error("Not Authorized");
+            error.statusCode = 403;
+            throw error;
+        }
         if(imageURL != apartment.imageURL) {
             deleteImage(apartment.imageURL);
         }
@@ -143,6 +148,11 @@ exports.deleteByID = (req, res, error) => {
         if(!apartment) {
             const error = new Error("Could not find apartment");
             error.statusCode = 404;
+            throw error;
+        }
+        if(apartment.user.toString() !== req.userId){
+            const error = new Error("Not Authorized");
+            error.statusCode = 403;
             throw error;
         }
         deleteImage(apartment.imageURL);
