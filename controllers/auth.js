@@ -9,6 +9,25 @@ exports.getUsers = (req, res, next) => {
     });
 }
 
+exports.getUserById = (req, res, next) => {
+    User.findById(req.params.userId).then(user => {
+        if(!user) {
+            const error = new Error("Could not find user");
+            error.statusCode = 404;
+            throw error;
+        }
+        res.status(200).json({
+            message: "Fetched user based on ID",
+            user: user
+        });
+    }).catch(err => {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    });
+}
+
 exports.signUp = (req, res, next) => {
     if(!validationResult(req).isEmpty()) {
         const error = new Error("Validation failed.");

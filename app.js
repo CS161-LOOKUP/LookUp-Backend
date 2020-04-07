@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const path = require('path');
+const cors = require('cors');
 
 const apartmentRoutes = require("./routes/apartment");
 const authRoutes = require("./routes/auth");
@@ -32,12 +33,13 @@ expressApp.use(multer({storage: fileStorage, fileFilter: fileFilter}).single('im
 expressApp.use('/images', express.static(path.join(__dirname, 'images')));
 
 //To avoid CORS error.
-expressApp.use((req, res, next) => {
+expressApp.use(cors());
+/*expressApp.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
-});
+});*/
 
 //ROUTES
 expressApp.use("/user", authRoutes);

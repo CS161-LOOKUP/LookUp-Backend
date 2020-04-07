@@ -2,10 +2,16 @@ const express = require('express');
 const { body } = require('express-validator');
 const authController = require("../controllers/auth");
 const User = require("../model/user");
+const isAuth = require("../middleware/isAuth");
 const router = express.Router();
 
 //GET /user/getUsers
-router.get("/getUsers", authController.getUsers);
+//Description: Get all the users
+router.get("/getUsers", isAuth, authController.getUsers);
+
+//GET /user/:userId
+//Description: Get user by Id
+router.get("/:userId", isAuth, authController.getUserById);
 
 //POST /user/createUser
 //Description: Create a user
