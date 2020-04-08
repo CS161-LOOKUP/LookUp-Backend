@@ -1,4 +1,5 @@
 const User = require("../model/user");
+const Apartment = require("../model/apartment");
 const bcrpyt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const { validationResult } = require('express-validator');
@@ -83,9 +84,36 @@ exports.login = (req, res, next) => {
         }
         let token = jwt.sign(
             {email: loadedUser.email, userId: loadedUser._id.toString()},
-            "129!89.:'dfYH1AJH2_*29jahbdh13jHG!J~khasn@#", { expiresIn: "1h" }
+            "129!89.:'dfYH1AJH2_*29jahbdh13jHG!J~khasn@#", { expiresIn: "2h" }
         );
         res.status(200).json({token: token, userId: loadedUser._id.toString()});
+    }).catch(err => {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    });
+}
+exports.addFavorite = (req, res, next) => {
+    let apartmentRef;
+    Apartment.findById(req.body.apartmentId)
+    .then(apartment => {
+        if(!apartment) {
+            const error = new Error("Apartment not found");
+            error.statusCode = 401;
+            throw error;
+        }
+        apartmentRef = apartment;
+        return User.findById(req.userId);
+    }).then(user => {
+        user.favorite.push(apartmentRef._id);
+        return user.save();
+    }).then(updatedUser => {
+        res.status(201).json({
+            message: "Added favorite to user",
+            user: updatedUser._id,
+            apartment: apartmentRef._id
+        });
     }).catch(err => {
         if (!err.statusCode) {
             err.statusCode = 500;

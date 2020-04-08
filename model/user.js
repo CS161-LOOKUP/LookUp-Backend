@@ -8,6 +8,7 @@ const userSchema = new Schema({
     phoneNumber: {type: String, required: true},
     email: {type: String, required: true},
     interests: [{type: String, required: true}],
+    favorite: [{type: Schema.Types.ObjectId, ref: "Apartment"}],
     posts: [{type: Schema.Types.ObjectId, ref: "Apartment"}]
 });
 
