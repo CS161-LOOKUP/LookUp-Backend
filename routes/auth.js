@@ -34,6 +34,10 @@ router.post("/createUser", [
 //Description: Log a user in.
 router.post("/login", authController.login);
 
+//POST /user/logout
+//Description: Log a user out.
+router.post("/logout", isAuth);
+
 //PUT /user/addFavorite
 //Description: Add a apartment to the user favorite list based on the
 //apartment ID. Body should contain, apartmentId field.

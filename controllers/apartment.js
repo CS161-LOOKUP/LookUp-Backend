@@ -22,6 +22,26 @@ exports.getPosts = (req, res, next) => {
     });
 };
 
+//Description: Get all the apartments a user by their ID.
+exports.getApartmentsOfUser = (req, res, next) => {
+    Apartment.find({user: req.body.userId})
+    .then(apartments => {
+        if(!apartments) {
+            const error = new Error("No user found");
+            error.statusCode = 404;
+            throw error;
+        }
+        res.status(200).json({
+            apartments: apartments
+        });
+    }).catch(err => {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    });
+}
+
 //Description: Gets all the listings based on an ID.
 exports.getPostByID = (req, res, next) => {
     Apartment.findById(req.params.apartmentId)

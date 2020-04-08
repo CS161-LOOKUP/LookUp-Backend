@@ -13,6 +13,10 @@ router.get('/posts', isAuth, apartmentController.getPosts);
 //Description: Get a apartment post based on the ID.
 router.get('/post/:apartmentId', isAuth, apartmentController.getPostByID);
 
+//GET /apartment/userID
+//Description: Get all the apartments a user has by passing in a user ID.
+router.get('/userId', isAuth, apartmentController.getApartmentsOfUser);
+
 //POST /apartment/createpost
 //Description: Create a post made by the user, this route doesn't use JSON in frontend
 //instead should use Form data because we need to upload an image.
