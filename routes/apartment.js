@@ -9,9 +9,14 @@ const router = express.Router();
 //Description: Gets all the listings
 router.get('/posts', isAuth, apartmentController.getPosts);
 
-//GET /apartment/:apartmentId
+//GET /apartment/post/:apartmentId
 //Description: Get a apartment post based on the ID.
 router.get('/post/:apartmentId', isAuth, apartmentController.getPostByID);
+
+//GET /apartment/getApartmentByToken
+//Description: Get apartments of the user specifed by the JWT token,
+//which has a userId.
+router.get('/getApartmentByToken', isAuth, apartmentController.getApartmentsByToken);
 
 //GET /apartment/userID
 //Description: Get all the apartments a user has by passing in a user ID.
