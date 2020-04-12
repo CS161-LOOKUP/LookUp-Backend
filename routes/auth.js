@@ -14,7 +14,7 @@ router.get("/getAllUsers", isAuth, authController.getUsers);
 router.get("/getUser/:userId", isAuth, authController.getUserById);
 
 //GET /user/getFavorite
-//Description: Get all the favorites a user has. This user is based
+//Description: Get all the favorite apartments ID a user has. This user is based
 //on the JWT userId.
 router.get("/getFavorite", isAuth, authController.getFavorite);
 
