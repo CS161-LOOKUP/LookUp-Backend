@@ -5,13 +5,18 @@ const User = require("../model/user");
 const isAuth = require("../middleware/isAuth");
 const router = express.Router();
 
-//GET /user/getUsers
+//GET /user/getAllUsers
 //Description: Get all the users
-router.get("/getUsers", isAuth, authController.getUsers);
+router.get("/getAllUsers", isAuth, authController.getUsers);
 
 //GET /user/:userId
 //Description: Get user by Id
-router.get("/:userId", isAuth, authController.getUserById);
+router.get("/getUser/:userId", isAuth, authController.getUserById);
+
+//GET /user/getFavorite
+//Description: Get all the favorites a user has. This user is based
+//on the JWT userId.
+router.get("/getFavorite", isAuth, authController.getFavorite);
 
 //POST /user/createUser
 //Description: Create a user

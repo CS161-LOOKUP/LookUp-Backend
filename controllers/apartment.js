@@ -40,7 +40,7 @@ exports.getApartmentsByToken = (req, res, next) => {
         }
         next(err);
     });
-}
+};
 
 //Description: Get all the apartments a user by their ID.
 exports.getApartmentsOfUser = (req, res, next) => {
@@ -60,7 +60,7 @@ exports.getApartmentsOfUser = (req, res, next) => {
         }
         next(err);
     });
-}
+};
 
 //Description: Gets all the listings based on an ID.
 exports.getPostByID = (req, res, next) => {

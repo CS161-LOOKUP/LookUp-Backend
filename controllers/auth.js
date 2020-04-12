@@ -5,15 +5,43 @@ const jwt = require("jsonwebtoken");
 const { validationResult } = require('express-validator');
 
 exports.getUsers = (req, res, next) => {
-    res.status(200).json({
-        message: "Get Users"
+    User.find().then(result => {
+        res.status(200).json({
+            message: "Fetched all the users",
+            users: result 
+        });
+    }).catch(err => {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
     });
-}
+};
+
+exports.getFavorite = (req, res, next) => {
+    User.findById(req.body.userId)
+    .then(user => {
+        if(!user) {
+            const error = new Error("Could not find user");
+            error.statusCode = 404;
+            throw error;
+        }
+        
+        res.status(200).json({
+            favorite: user.favorite
+        });
+    }).catch(err => {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    });
+};
 
 exports.getUserById = (req, res, next) => {
     User.findById(req.params.userId).then(user => {
         if(!user) {
-            const error = new Error("Could not find user");
+            const error = new Error("Could not find user test");
             error.statusCode = 404;
             throw error;
         }
@@ -27,7 +55,7 @@ exports.getUserById = (req, res, next) => {
         }
         next(err);
     });
-}
+};
 
 exports.signUp = (req, res, next) => {
     if(!validationResult(req).isEmpty()) {
@@ -93,7 +121,8 @@ exports.login = (req, res, next) => {
         }
         next(err);
     });
-}
+};
+
 exports.addFavorite = (req, res, next) => {
     let apartmentRef;
     Apartment.findById(req.body.apartmentId)
@@ -120,4 +149,4 @@ exports.addFavorite = (req, res, next) => {
         }
         next(err);
     });
-}
+};
