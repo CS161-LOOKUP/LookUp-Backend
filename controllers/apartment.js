@@ -98,7 +98,7 @@ exports.createPost = (req, res, next) => {
     const title = req.body.title;
     const description = req.body.description;
     const price = req.body.price;
-    const imageURL = req.file.path;
+    const imageURL = req.body.imageURL;
     const apartment = new Apartment({
         title: title,
         description: description,
@@ -136,14 +136,14 @@ exports.updateByID = (req, res, next) => {
     let description = req.body.description
     let price = req.body.price
     let imageURL = req.body.imageURL
-    if (req.file) {
-        imageURL = req.file.path;
-    }
-    if(!imageURL){
-        const error = new Error("No file picked");
-        error.statusCode = 422;
-        throw error;
-    }
+    // if (req.file) {
+    //     imageURL = req.file.path;
+    // }
+    // if(!imageURL){
+    //     const error = new Error("No file picked");
+    //     error.statusCode = 422;
+    //     throw error;
+    // }
 
     Apartment.findById(apartmentId).then(apartment => {
         if(!apartment) {
@@ -156,9 +156,9 @@ exports.updateByID = (req, res, next) => {
             error.statusCode = 403;
             throw error;
         }
-        if(imageURL != apartment.imageURL) {
-            deleteImage(apartment.imageURL);
-        }
+        // if(imageURL != apartment.imageURL) {
+        //     deleteImage(apartment.imageURL);
+        // }
         apartment.title = title;
         apartment.price = price;
         apartment.description = description;
@@ -177,10 +177,10 @@ exports.updateByID = (req, res, next) => {
     });
 };
 
-const deleteImage = filePath => {
-    filePath = path.join(__dirname, "..", filePath);
-    fs.unlink(filePath, err => console.log(err));
-};
+// const deleteImage = filePath => {
+//     filePath = path.join(__dirname, "..", filePath);
+//     fs.unlink(filePath, err => console.log(err));
+// };
 
 //Delete routes
 exports.deleteByID = (req, res, error) => {
