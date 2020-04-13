@@ -7,7 +7,9 @@ const userSchema = new Schema({
     password: {type: String, required: true},
     phoneNumber: {type: String, required: true},
     email: {type: String, required: true},
-    interests: [{type: String, required: true}],
+    music: [{type: Number, required: true}],
+    movie: [{type: Number, required: true}],
+    hobbies_interests: [{type: Number, required: true}],
     favorite: [{type: Schema.Types.ObjectId, ref: "Apartment"}],
     posts: [{type: Schema.Types.ObjectId, ref: "Apartment"}]
 });

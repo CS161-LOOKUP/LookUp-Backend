@@ -32,7 +32,9 @@ router.post("/createUser", [
     body("password").trim().isLength({min: 5}),
     body("firstName").trim().not().isEmpty(),
     body("lastName").trim().not().isEmpty(),
-    body("interests").not().isEmpty()
+    body("music").notEmpty(),
+    body("movie").notEmpty(),
+    body("hobbies_interests").notEmpty()
 ], authController.signUp);
 
 //POST /user/login

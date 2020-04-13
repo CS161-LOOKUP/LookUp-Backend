@@ -69,7 +69,9 @@ exports.signUp = (req, res, next) => {
     const password = req.body.password;
     const phoneNumber = req.body.phoneNumber;
     const email = req.body.email;
-    const interests = req.body.interests;
+    const movie = req.body.movie;
+    const music = req.body.music;
+    const hobbies_interests = req.body.hobbies_interests;
     
     bcrpyt.hash(password, 12).then(hashedPassword => {
         const user = new User({
@@ -78,7 +80,9 @@ exports.signUp = (req, res, next) => {
             password: hashedPassword,
             phoneNumber: phoneNumber,
             email: email,
-            interests: interests
+            movie: movie,
+            music: music,
+            hobbies_interests: hobbies_interests
         });
         return user.save();
     }).then(result => {
