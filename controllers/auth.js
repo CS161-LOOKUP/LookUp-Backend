@@ -69,10 +69,25 @@ exports.signUp = (req, res, next) => {
     const password = req.body.password;
     const phoneNumber = req.body.phoneNumber;
     const email = req.body.email;
-    const movie = req.body.movie;
-    const music = req.body.music;
-    const hobbies_interests = req.body.hobbies_interests;
     
+    const music_dict = {};
+    music_dict["slow"] = req.body.music[0];
+    music_dict["fast"] = req.body.music[1];
+    music_dict["country"] = req.body.music[2];
+    music_dict["hiphop"] = req.body.music[3];
+
+    const movie_dict = {};
+    movie_dict["comedy"] = req.body.movie[0];
+    movie_dict["thriller"] = req.body.movie[1];
+    movie_dict["horrer"] = req.body.movie[2];
+    movie_dict["sci-fi"] = req.body.movie[3];
+
+    const hobbies_interests_dict = {};
+    hobbies_interests_dict["comedy"] = req.body.hobbies_interests[0];
+    hobbies_interests_dict["thriller"] = req.body.hobbies_interests[1];
+    hobbies_interests_dict["horrer"] = req.body.hobbies_interests[2];
+    hobbies_interests_dict["sci-fi"] = req.body.hobbies_interests[3];
+
     bcrpyt.hash(password, 12).then(hashedPassword => {
         const user = new User({
             firstName: firstName,
@@ -80,9 +95,9 @@ exports.signUp = (req, res, next) => {
             password: hashedPassword,
             phoneNumber: phoneNumber,
             email: email,
-            movie: movie,
-            music: music,
-            hobbies_interests: hobbies_interests
+            movie: movie_dict,
+            music: music_dict,
+            hobbies_interests: hobbies_interests_dict
         });
         return user.save();
     }).then(result => {
