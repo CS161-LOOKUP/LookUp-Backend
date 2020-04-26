@@ -195,7 +195,7 @@ exports.deleteByID = (req, res, error) => {
             error.statusCode = 403;
             throw error;
         }
-        deleteImage(apartment.imageURL);
+        //deleteImage(apartment.imageURL);
         return Apartment.findByIdAndRemove(req.params.apartmentId);
     }).then(result => {
         return User.findById(req.userId);

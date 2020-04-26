@@ -83,10 +83,10 @@ exports.signUp = (req, res, next) => {
     movie_dict["sci-fi"] = req.body.movie[3];
 
     const hobbies_interests_dict = {};
-    hobbies_interests_dict["comedy"] = req.body.hobbies_interests[0];
-    hobbies_interests_dict["thriller"] = req.body.hobbies_interests[1];
-    hobbies_interests_dict["horrer"] = req.body.hobbies_interests[2];
-    hobbies_interests_dict["sci-fi"] = req.body.hobbies_interests[3];
+    hobbies_interests_dict["sports"] = req.body.hobbies_interests[0];
+    hobbies_interests_dict["shopping"] = req.body.hobbies_interests[1];
+    hobbies_interests_dict["pets"] = req.body.hobbies_interests[2];
+    hobbies_interests_dict["socializing"] = req.body.hobbies_interests[3];
 
     bcrpyt.hash(password, 12).then(hashedPassword => {
         const user = new User({
