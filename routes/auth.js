@@ -37,6 +37,10 @@ router.post("/createUser", [
     body("hobbies_interests").notEmpty()
 ], authController.signUp);
 
+//POST /user/randomUsers
+//Description: Creating function to add random users
+router.post("/randomUsers", authController.randomUser);
+
 //POST /user/login
 //Description: Log a user in.
 router.post("/login", authController.login);

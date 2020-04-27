@@ -57,6 +57,12 @@ exports.getUserById = (req, res, next) => {
     });
 };
 
+function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 exports.signUp = (req, res, next) => {
     if(!validationResult(req).isEmpty()) {
         const error = new Error("Validation failed.");
@@ -80,7 +86,7 @@ exports.signUp = (req, res, next) => {
     movie_dict["comedy"] = req.body.movie[0];
     movie_dict["thriller"] = req.body.movie[1];
     movie_dict["horrer"] = req.body.movie[2];
-    movie_dict["sci-fi"] = req.body.movie[3];
+    movie_dict["sci_fi"] = req.body.movie[3];
 
     const hobbies_interests_dict = {};
     hobbies_interests_dict["sports"] = req.body.hobbies_interests[0];
@@ -111,6 +117,64 @@ exports.signUp = (req, res, next) => {
         }
         next(err);
     });
+};
+
+exports.randomUser = (req, res, next) => {
+    // if(!validationResult(req).isEmpty()) {
+    //     const error = new Error("Validation failed.");
+    //     error.statusCode = 422;
+    //     error.data = validationResult(req).array();
+    //     throw error;
+    // }
+    for (i = 0; i < 100; i++) {
+        const firstName = "First Name " + i;
+        const lastName = "Last Name " + i;
+        const password = "firstlast" + i;
+        const phoneNumber = "408000000" + i;
+        const email = "email" + i + "@email.com";
+    
+        const music_dict = {};
+        music_dict["slow"] = getRandomIntInclusive(1, 5);
+        music_dict["fast"] = getRandomIntInclusive(1, 5);
+        music_dict["country"] = getRandomIntInclusive(1, 5);
+        music_dict["hiphop"] = getRandomIntInclusive(1, 5);
+
+        const movie_dict = {};
+        movie_dict["comedy"] = getRandomIntInclusive(1, 5);
+        movie_dict["thriller"] = getRandomIntInclusive(1, 5);
+        movie_dict["horrer"] = getRandomIntInclusive(1, 5);
+        movie_dict["sci_fi"] = getRandomIntInclusive(1, 5);
+
+        const hobbies_interests_dict = {};
+        hobbies_interests_dict["sports"] = getRandomIntInclusive(1, 5);
+        hobbies_interests_dict["shopping"] = getRandomIntInclusive(1, 5);
+        hobbies_interests_dict["pets"] = getRandomIntInclusive(1, 5);
+        hobbies_interests_dict["socializing"] = getRandomIntInclusive(1, 5);
+
+        bcrpyt.hash(password, 12).then(hashedPassword => {
+            const user = new User({
+                firstName: firstName,
+                lastName: lastName,
+                password: hashedPassword,
+                phoneNumber: phoneNumber,
+                email: email,
+                movie: movie_dict,
+                music: music_dict,
+                hobbies_interests: hobbies_interests_dict
+            });
+            return user.save();
+        }).then(result => {
+            res.status(201).json({
+                message: "User created successfully!",
+                user: result
+            });
+        }).catch(err => {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        });   
+    }
 };
 
 exports.login = (req, res, next) => {
