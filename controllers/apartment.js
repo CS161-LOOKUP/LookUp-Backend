@@ -39,7 +39,6 @@ exports.getPosts = (req, res, next) => {
             }
             console.log("User JSON saved!");
         });
-
         return Apartment.find();
     }).then(result => {
         const filteredApartment = result.filter(apartment => similarUser.includes(apartment.user.toString()));
@@ -53,21 +52,6 @@ exports.getPosts = (req, res, next) => {
             err: err
         });
     });
-
-
-
-    // Apartment.find().then(result => {
-    //     const filteredApartment = result.filter(apartment => similarUser.includes(apartment.user.toString()));
-    //     res.status(200).json({
-    //         message: "Fetched all the listings.",
-    //         post: filteredApartment
-    //     });
-    // }).catch( err => {
-    //     res.status(500).json({
-    //         message: "Found no listings available.",
-    //         err: err
-    //     });
-    // });
 };
 
 //Description: Get all the apartments based on the token.
