@@ -136,17 +136,24 @@ exports.createPost = (req, res, next) => {
     });
     apartment.save()
     .then(createdApartment => {
-        return User.findById(req.userId);
-    }).then(user => {
-        user.posts.push(apartment);
-        return user.save();
-    }).then(updatedUser => {
         res.status(201).json({
             message: "Apartment created succesfully!",
-            post: apartment,
-            user: updatedUser._id
+            post: createdApartment,
+            user: req.userId
         });
-    }).catch(err => {
+        //return User.findById(req.userId);
+    })
+    // .then(user => {
+    //     user.posts.push(apartment);
+    //     return user.save();
+    // }).then(updatedUser => {
+    //     res.status(201).json({
+    //         message: "Apartment created succesfully!",
+    //         post: apartment,
+    //         user: updatedUser._id
+    //     });
+    // })
+    .catch(err => {
         if (!err.statusCode) {
             err.statusCode = 500;
         }
@@ -161,13 +168,7 @@ exports.createRandomPosts = (req, res, next) => {
     User.find()
     .then(users => {
         listUsers = users;
-        var count = 0;
         for(i = 0; i < listUsers.length; i++){
-            count = i;
-            console.log("Here");
-            console.log(listUsers.length);
-            console.log(listUsers[count]._id);
-            console.log(listUsers[i]._id);
             const title = "User " + i;
             const description = "Apartment posted by user" + i;
             const price = 1000 * i;
@@ -181,15 +182,22 @@ exports.createRandomPosts = (req, res, next) => {
             });
             apartment.save()
             .then(createdApartment => {
-                console.log(listUsers[count]._id);
-                return User.findById(listUsers[count]._id);
-            }).then(user => {
-                user.posts.push(apartment);
-                return user.save();
-            }).then(updatedUser => {
-                console.log("Done");
-                return;
-            }).catch(err => {
+                res.status(201).json({
+                    message: "Apartment created succesfully!",
+                    post: createdApartment,
+                    user: req.userId
+                });
+                //console.log(listUsers[count]._id);
+                //return User.findById(listUsers[count]._id);
+            })
+            // .then(user => {
+            //     user.posts.push(apartment);
+            //     return user.save();
+            // }).then(updatedUser => {
+            //     console.log("Done");
+            //     return;
+            // })
+            .catch(err => {
                 next(err); 
             });
         }

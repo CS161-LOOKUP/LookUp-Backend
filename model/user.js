@@ -10,8 +10,7 @@ const userSchema = new Schema({
     music: {},
     movie: {},
     hobbies_interests: {},
-    favorite: [{type: Schema.Types.ObjectId, ref: "Apartment"}],
-    posts: [{type: Schema.Types.ObjectId, ref: "Apartment"}]
+    favorite: [{type: Schema.Types.ObjectId, ref: "Apartment"}]
 });
 
 module.exports = mongoose.model("User", userSchema);
