@@ -20,11 +20,13 @@ module.exports = (req, res, next) => {
         pyShell.send(currentUserString);
         pyShell.on("message", function(message){
             console.log(message);
+            res.locals.data = message;
             //req.userBasedOnDataAnalysis = message
         });
         pyShell.end(function(err, code, signal){
             if (err) throw err;
             console.log("Python Shell finished");
+            next();
         });
     }).catch(err => {
         if (!err.statusCode) {
@@ -32,5 +34,4 @@ module.exports = (req, res, next) => {
         }
         next(err);
     });
-    next();
 };
