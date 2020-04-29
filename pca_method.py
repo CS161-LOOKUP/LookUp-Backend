@@ -10,6 +10,10 @@ import numpy as np
 
 
 # %%
+input = sys.stdin.readlines()
+dataInString = input[0]
+datalist = list(map(int, dataInString.split()))
+
 with open('./user.json') as json_file:
     data = json.load(json_file)
 data_file = open('data_file.csv', 'w')
@@ -41,7 +45,8 @@ transformed_data = model.transform(data.to_numpy()[:,1:].astype(float))
 
 def get_neighbors(user, top_n):
     transformed = model.transform(np.array(user).reshape(1, 12))
-    
+    #transformed = model.transform(user.reshape(1, 12))
+    #transformed = model.transform(np.array(user))
     dists = sorted(zip(np.sum((transformed_data - transformed)**2, axis=1), data['id']))
     return [name for d,name in dists[:top_n]]
     
@@ -49,8 +54,7 @@ def get_neighbors(user, top_n):
 
 
 # %%
-#print(get_neighbors(sys.argv[1], 10))
-print(get_neighbors([1] * 12, 10))
+print(get_neighbors(datalist, 10))
 
 
 # %%

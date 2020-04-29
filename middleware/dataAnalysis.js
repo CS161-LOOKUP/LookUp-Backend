@@ -10,27 +10,17 @@ module.exports = (req, res, next) => {
             error.statusCode = 404;
             throw error;
         }
-        currentUserInformation.push(user.music.slow, user.music.fast, user.music.country, user.music.hiphop, user.movie.comedy, user.movie.thriller,
-            user.movie.horrer, user.movie.sci_fi, user.hobbies_interests.sports, user.hobbies_interests.shopping, user.hobbies_interests.pets, user.hobbies_interests.socializing);
-
-        //Run DataAnalysis
-        // const spawn = require("child_process").spawn;
-        // var pythonProcessSpawn = spawn('python', ['./pca_method.py', currentUserInformation]);
-
-        // console.log("Before");
-        // pythonProcessSpawn.stdout.on('data', function (data){
-        //     console.log("Printing data from data analysis");
-        //     console.log(data.toString());
-        // });
-        // console.log("After");
+        var currentUserString = user.music.slow + " " + user.music.fast + " " + user.music.country + " " + user.music.hiphop + " " + user.movie.comedy + " " 
+        + user.movie.thriller + " " + user.movie.horrer + " " + user.movie.sci_fi + " " + user.hobbies_interests.sports + " " + user.hobbies_interests.shopping + " " + user.hobbies_interests.pets + " " + user.hobbies_interests.socializing;
 
         var options = {
-            pythonPath: "/usr/local/bin/python3",
-            args: [currentUserInformation]
+            pythonPath: "/usr/local/bin/python3"
         };
-        var pyShell = new PythonShell('./test.py', options);
+        var pyShell = new PythonShell('./pca_method.py', options);
+        pyShell.send(currentUserString);
         pyShell.on("message", function(message){
             console.log(message);
+            //req.userBasedOnDataAnalysis = message
         });
         pyShell.end(function(err, code, signal){
             if (err) throw err;

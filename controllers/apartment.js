@@ -10,6 +10,8 @@ const User = require('../model/user');
 //Description: Gets all apartments related to current user.
 exports.getPosts = (req, res, next) => {
     const similarUser = [];
+    //const similarUser = req.userBasedOnDataAnalysis;
+    //console.log(req.userBasedOnDataAnalysis);
     User.find().then(users => {
         const updatedUserData = [];
         for(i = 0; i < users.length; i++){
