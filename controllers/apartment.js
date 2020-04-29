@@ -154,6 +154,53 @@ exports.createPost = (req, res, next) => {
     });
 }; 
 
+
+//Post route - To create apartments for 100 random users in the DB. For testing purposes.
+exports.createRandomPosts = (req, res, next) => {
+    var listUsers = [];
+    User.find()
+    .then(users => {
+        listUsers = users;
+        var count = 0;
+        for(i = 0; i < listUsers.length; i++){
+            count = i;
+            console.log("Here");
+            console.log(listUsers.length);
+            console.log(listUsers[count]._id);
+            console.log(listUsers[i]._id);
+            const title = "User " + i;
+            const description = "Apartment posted by user" + i;
+            const price = 1000 * i;
+            const imageURL = "https://media.gettyimages.com/photos/suburban-house-picture-id984568356?s=612x612";
+            const apartment = new Apartment({
+                title: title,
+                description: description,
+                price: price,
+                imageURL: imageURL,
+                user: listUsers[i]._id
+            });
+            apartment.save()
+            .then(createdApartment => {
+                console.log(listUsers[count]._id);
+                return User.findById(listUsers[count]._id);
+            }).then(user => {
+                user.posts.push(apartment);
+                return user.save();
+            }).then(updatedUser => {
+                console.log("Done");
+                return;
+            }).catch(err => {
+                next(err); 
+            });
+        }
+    }).catch(err => {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err); 
+    });
+}; 
+
 //PUT routes
 exports.updateByID = (req, res, next) => {
     let apartmentId = req.params.apartmentId;
@@ -233,7 +280,7 @@ exports.deleteByID = (req, res, error) => {
         res.status(200).json({
             message: "Deleted apartment"
         });
-    }).catch(error => {
+    }).catch(err => {
         if (!err.statusCode) {
             err.statusCode = 500;
         }

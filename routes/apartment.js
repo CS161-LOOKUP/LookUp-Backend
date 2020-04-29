@@ -31,6 +31,10 @@ router.post("/createpost", isAuth, [
     body('description').trim().isLength({min: 1})
 ], apartmentController.createPost);
 
+//POST /apartment/createRandomPost
+//Description: Creating apartments for the random users added for testing purposes.
+router.post("/createRandomPost", apartmentController.createRandomPosts);
+
 //PUT /apartment/update/:apartmentId
 //Description: Updates a existing post. Need to send imagePath if user didn't select a new image.
 //Route doesn't use JSON also, since image could be changed. 
