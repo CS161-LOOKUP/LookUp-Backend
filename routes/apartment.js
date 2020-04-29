@@ -2,12 +2,13 @@ const express = require("express");
 const {body} = require('express-validator');
 const apartmentController = require("../controllers/apartment");
 const isAuth = require("../middleware/isAuth");
+const dataAnalysis = require("../middleware/dataAnalysis");
 
 const router = express.Router();
 
 //GET /apartment/posts
 //Description: Gets all the listings
-router.get('/posts', isAuth, apartmentController.getPosts);
+router.get('/posts', isAuth, dataAnalysis, apartmentController.getPosts);
 
 //GET /apartment/post/:apartmentId
 //Description: Get a apartment post based on the ID.
@@ -29,6 +30,10 @@ router.post("/createpost", isAuth, [
     body('title').trim().isLength({min: 1}),
     body('description').trim().isLength({min: 1})
 ], apartmentController.createPost);
+
+//POST /apartment/createRandomPost
+//Description: Creating apartments for the random users added for testing purposes.
+router.post("/createRandomPost", apartmentController.createRandomPosts);
 
 //PUT /apartment/update/:apartmentId
 //Description: Updates a existing post. Need to send imagePath if user didn't select a new image.

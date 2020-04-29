@@ -9,7 +9,9 @@ const User = require('../model/user');
 //GET routes
 //Description: Gets all apartments related to current user.
 exports.getPosts = (req, res, next) => {
-    const similarUser = [];
+    const similarUser = res.locals.data;
+    //console.log("HERE");
+    //console.log(res.locals.data);
     User.find().then(users => {
         const updatedUserData = [];
         for(i = 0; i < users.length; i++){
@@ -39,7 +41,6 @@ exports.getPosts = (req, res, next) => {
             }
             console.log("User JSON saved!");
         });
-
         return Apartment.find();
     }).then(result => {
         const filteredApartment = result.filter(apartment => similarUser.includes(apartment.user.toString()));
@@ -53,21 +54,6 @@ exports.getPosts = (req, res, next) => {
             err: err
         });
     });
-
-
-
-    // Apartment.find().then(result => {
-    //     const filteredApartment = result.filter(apartment => similarUser.includes(apartment.user.toString()));
-    //     res.status(200).json({
-    //         message: "Fetched all the listings.",
-    //         post: filteredApartment
-    //     });
-    // }).catch( err => {
-    //     res.status(500).json({
-    //         message: "Found no listings available.",
-    //         err: err
-    //     });
-    // });
 };
 
 //Description: Get all the apartments based on the token.
@@ -150,16 +136,71 @@ exports.createPost = (req, res, next) => {
     });
     apartment.save()
     .then(createdApartment => {
-        return User.findById(req.userId);
-    }).then(user => {
-        user.posts.push(apartment);
-        return user.save();
-    }).then(updatedUser => {
         res.status(201).json({
             message: "Apartment created succesfully!",
-            post: apartment,
-            user: updatedUser._id
+            post: createdApartment,
+            user: req.userId
         });
+        //return User.findById(req.userId);
+    })
+    // .then(user => {
+    //     user.posts.push(apartment);
+    //     return user.save();
+    // }).then(updatedUser => {
+    //     res.status(201).json({
+    //         message: "Apartment created succesfully!",
+    //         post: apartment,
+    //         user: updatedUser._id
+    //     });
+    // })
+    .catch(err => {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err); 
+    });
+}; 
+
+
+//Post route - To create apartments for 100 random users in the DB. For testing purposes.
+exports.createRandomPosts = (req, res, next) => {
+    var listUsers = [];
+    User.find()
+    .then(users => {
+        listUsers = users;
+        for(i = 0; i < listUsers.length; i++){
+            const title = "User " + i;
+            const description = "Apartment posted by user" + i;
+            const price = 1000 * i;
+            const imageURL = "https://media.gettyimages.com/photos/suburban-house-picture-id984568356?s=612x612";
+            const apartment = new Apartment({
+                title: title,
+                description: description,
+                price: price,
+                imageURL: imageURL,
+                user: listUsers[i]._id
+            });
+            apartment.save()
+            .then(createdApartment => {
+                res.status(201).json({
+                    message: "Apartment created succesfully!",
+                    post: createdApartment,
+                    user: req.userId
+                });
+                //console.log(listUsers[count]._id);
+                //return User.findById(listUsers[count]._id);
+            })
+            // .then(user => {
+            //     user.posts.push(apartment);
+            //     return user.save();
+            // }).then(updatedUser => {
+            //     console.log("Done");
+            //     return;
+            // })
+            .catch(err => {
+                next(err); 
+            });
+        }
     }).catch(err => {
         if (!err.statusCode) {
             err.statusCode = 500;
@@ -247,7 +288,7 @@ exports.deleteByID = (req, res, error) => {
         res.status(200).json({
             message: "Deleted apartment"
         });
-    }).catch(error => {
+    }).catch(err => {
         if (!err.statusCode) {
             err.statusCode = 500;
         }
