@@ -1,5 +1,5 @@
 const {validationResult} = require('express-validator');
-const fs = require('fs');
+
 const path = require('path');
 const converter = require('json-2-csv');
 
@@ -10,39 +10,8 @@ const User = require('../model/user');
 //Description: Gets all apartments related to current user.
 exports.getPosts = (req, res, next) => {
     const similarUser = res.locals.data;
-    //console.log("HERE");
-    //console.log(res.locals.data);
-    User.find().then(users => {
-        const updatedUserData = [];
-        for(i = 0; i < users.length; i++){
-            var dict = {};
-            dict["id"] = users[i]._id;
-            dict["slow"] = users[i].music.slow;
-            dict["fast"] = users[i].music.fast;
-            dict["country"] = users[i].music.country;
-            dict["hiphop"] = users[i].music.hiphop;
-            dict["comedy"] = users[i].movie.comedy;
-            dict["thriller"] = users[i].movie.thriller;
-            dict["horrer"] = users[i].movie.horrer;
-            dict["sci_fi"] = users[i].movie.sci_fi;
-            dict["sports"] = users[i].hobbies_interests.sports;
-            dict["shopping"] = users[i].hobbies_interests.shopping;
-            dict["pets"] = users[i].hobbies_interests.pets;
-            dict["socializing"] = users[i].hobbies_interests.socializing;
-            updatedUserData.push(dict);
-        }
-        
-        fs.writeFile("user.json", JSON.stringify(updatedUserData), function(err){
-            if (err) {
-                res.status(400).json({
-                    message: "Could not write to file"
-                });
-                console.log(err);
-            }
-            console.log("User JSON saved!");
-        });
-        return Apartment.find();
-    }).then(result => {
+    Apartment.find()
+    .then(result => {
         const filteredApartment = result.filter(apartment => similarUser.includes(apartment.user.toString()));
         res.status(200).json({
             message: "Fetched all the listings.",
