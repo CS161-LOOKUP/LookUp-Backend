@@ -19,7 +19,7 @@ exports.getUsers = (req, res, next) => {
 };
 
 exports.getFavorite = (req, res, next) => {
-    User.findById(req.body.userId)
+    User.findById(req.userId)
     .then(user => {
         if(!user) {
             const error = new Error("Could not find user");
