@@ -24,7 +24,7 @@
     "express": "^4.17.1",
     "express-validator": "^6.4.0",
     "json-2-csv": "^3.6.2",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "mongodb": "^3.5.4",
     "mongoose": "^5.9.3",
     "multer": "^1.4.2",
